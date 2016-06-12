@@ -7,6 +7,22 @@
 #  This file is distributed under BSD 3-Clause License.
 #
 
+
+#	furui konpaira
+
+
+
+
+CC = cc
+OPTCFLAGS = -Os
+
+# CFLAGS = -Wall -g # -DDEBUG
+# CFLAGS = -Wall -g -v -H -save-temps -S -M -dM $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+# CFLAGS = -Wall -g -v -H -save-temps $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+CFLAGS = -Os -cwd explicit -I./ -i- -I/boot/home/config/include -I/boot/develop/headers/  -I/boot/develop_x86/headers/ # -I./ # 
+
+
+
 all: mrubyc_lib mrubyc_bin
 
 

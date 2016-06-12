@@ -7,7 +7,22 @@
 #  This file is distributed under BSD 3-Clause License.
 #
 
-CFLAGS = -Wall -g # -DDEBUG
+
+#	furui konpaira
+
+
+
+
+CC = cc
+OPTCFLAGS = -Os
+
+# CFLAGS = -Wall -g # -DDEBUG
+# CFLAGS = -Wall -g -v -H -save-temps -S -M -dM $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+# CFLAGS = -Wall -g -v -H -save-temps $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+# CFLAGS = -Wall -v -H -save-temps $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+CFLAGS = -Os -cwd explicit -I./ -i- -I/boot/home/config/include -I/boot/develop/headers/  -I/boot/develop_x86/headers/ # -I./ # 
+
+AR = ld
 
 COMMON_OBJ = class.o global.o load.o vm.o static.o value.o common.o symbol.o
 RUBY_LIBS = c_array.o c_numeric.o
@@ -18,7 +33,9 @@ clean:
 	@rm -Rf *.o *.a html
 
 libmrubyc.a: $(COMMON_OBJ) $(RUBY_LIBS)
-	$(AR) r $@ $(COMMON_OBJ) $(RUBY_LIBS)
+# libmrubyc: $(COMMON_OBJ) $(RUBY_LIBS)
+#	$(AR) r $@ $(COMMON_OBJ) $(RUBY_LIBS)
+	$(AR) -xm l -o ./$@ $(COMMON_OBJ) $(RUBY_LIBS)
 
 class.o:	class.h value.h static.h
 common.o: common.h
