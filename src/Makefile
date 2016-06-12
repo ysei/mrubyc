@@ -7,10 +7,29 @@
 #  This file is distributed under BSD 3-Clause License.
 #
 
-CFLAGS = -Wall -g # -DDEBUG
+
+#	furui konpaira
+
+
+
+
+CC = gcc
+OPTCFLAGS = -Os
+
+# CFLAGS = -Wall -g # -DDEBUG
+# CFLAGS = -Wall -g -v -H -save-temps -S -M -dM $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+# CFLAGS = -Wall -g -v -H -save-temps $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+CFLAGS = -Wall -v -H -save-temps $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
 
 COMMON_OBJ = class.o global.o load.o vm.o static.o value.o common.o symbol.o
 RUBY_LIBS = c_array.o c_numeric.o
+
+# C_INCLUDE_PATH = $(BEINCLUDES)
+# INCLUDES = -I/boot/develop/headers
+
+# CFLAGS += " $(INCLUDES) "
+# CC += $(CFLAGS)
+
 
 all: libmrubyc.a
 

@@ -7,6 +7,16 @@
 #  This file is distributed under BSD 3-Clause License.
 #
 
+
+CC = gcc
+OPTCFLAGS = -Os
+
+# CFLAGS = -Wall -g # -DDEBUG
+# CFLAGS = -Wall -g -v -H -save-temps -S -M -dM $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+CFLAGS = -Wall -g -v -H -save-temps $(DEFAULTCFLAGS) $(FUNCCFLAGS) $(OPTCFLAGS) # -DDEBUG
+
+
+
 all: mrubyc_lib mrubyc_bin
 
 
