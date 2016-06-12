@@ -31,7 +31,9 @@
   @param  n
   @return  symbol string
 */
-char *find_irep_symbol( void *p, int n )
+// char *find_irep_symbol( void *p, int n )
+// char *find_irep_symbol( int *p, int n )
+char *find_irep_symbol( char *p, int n )
 {
   int cnt = get_int_4(p);
   if( n >= cnt ) return 0;
@@ -387,12 +389,19 @@ inline static int op_enter( mrb_vm *vm, uint32_t code, mrb_value *regs )
 */
 inline static int op_return( mrb_vm *vm, uint32_t code, mrb_value *regs )
 {
+  mrb_callinfo *callinfo; // = 0;
+
   // return value
   mrb_value v = regs[GETARG_A(code)];
   regs[0] = v;
   // restore irep,pc,regs
   vm->callinfo_top--;
-  mrb_callinfo *callinfo = vm->callinfo + vm->callinfo_top;
+// mrb_callinfo *callinfo = vm->callinfo + vm->callinfo_top;
+//// mrb_callinfo *callinfo = ( vm->callinfo ) + ( vm->callinfo_top );
+//// mrb_callinfo callinfo = *( vm->callinfo + vm->callinfo_top );
+//// *callinfo = *( vm->callinfo + vm->callinfo_top );
+  callinfo = vm->callinfo + vm->callinfo_top;
+
   vm->reg_top = callinfo->reg_top;
   vm->pc_irep = callinfo->pc_irep;
   vm->pc = callinfo->pc;
@@ -805,6 +814,8 @@ inline static int op_array( mrb_vm *vm, uint32_t code, mrb_value *regs )
 inline static int op_lambda( mrb_vm *vm, uint32_t code, mrb_value *regs )
 {
   int c = GETARG_C(code);
+  int a;
+
   mrb_proc *proc = mrb_rproc_alloc("(lambda)");
   mrb_irep *p = vm->irep;
   while( c > 0 ) {
@@ -813,7 +824,9 @@ inline static int op_lambda( mrb_vm *vm, uint32_t code, mrb_value *regs )
   }
   proc->c_func = 0;
   proc->func.irep = p;
-  int a = GETARG_A(code);
+// int a = GETARG_A(code);
+  a = GETARG_A(code);
+
   regs[a].tt = MRB_TT_PROC;
   regs[a].value.proc = proc;
 
@@ -1028,9 +1041,15 @@ void vm_boot(struct VM *vm)
 int vm_run_step( mrb_vm *vm )
 {
   int ret = 0;
+  mrb_value *regs;
+  enum OPCODE opcode;
+//// int pc = 0;	// damii
 
   // get one bytecode
-  uint8_t *p = (uint8_t *)(vm->pc_irep->code+vm->pc*4);
+// uint8_t *p = (uint8_t *)(vm->pc_irep->code+vm->pc*4);
+//// uint8_t *p = (uint8_t *)((vm->pc_irep->code)+((vm->pc)<<2));
+//// uint8_t *p; p = (uint8_t *)((vm->pc_irep->code)+((vm->pc)<<2));
+  uint8_t *p = (uint8_t *)((uint8_t *)(vm->pc_irep->code)+((vm->pc)<<2));
   uint32_t code = *p++;
   code = code << 8 | *p++;
   code = code << 8 | *p++;
@@ -1040,10 +1059,13 @@ int vm_run_step( mrb_vm *vm )
   vm->pc += 1;
 
   // regs
-  mrb_value *regs = vm->regs + vm->reg_top;
+// mrb_value *regs = vm->regs + vm->reg_top;
+//// *regs = *( vm->regs + vm->reg_top );
+  regs = vm->regs + vm->reg_top;
 
   // Dispatch
-  enum OPCODE opcode = GET_OPCODE(code);
+// enum OPCODE opcode = GET_OPCODE(code);
+  opcode = GET_OPCODE(code);
   switch( opcode ) {
     case OP_NOP:        ret = op_nop       (vm, code, regs); break;
     case OP_MOVE:       ret = op_move      (vm, code, regs); break;
@@ -1077,7 +1099,7 @@ int vm_run_step( mrb_vm *vm )
     case OP_TCLASS:     ret = op_tclass    (vm, code, regs); break;
     case OP_STOP:       ret = op_stop      (vm, code, regs); break;
     default:
-      printf("Skip OP=%02x\n", GET_OPCODE(code));
+      printf("Skip OP=%02x\n", GET_OPCODE(code));	// warning: unsigned int format, long unsigned int arg (arg 2)
       break;
   }
 

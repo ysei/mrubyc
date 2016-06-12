@@ -47,10 +47,19 @@ static void c_array_plus(mrb_vm *vm, mrb_value *v)
 {
   if( GET_TT_ARG(0) == MRB_TT_ARRAY ){
     mrb_value ary;
+    mrb_value *src;
+    mrb_value **dst;
+
     ary.tt = MRB_TT_ARRAY;
     ary.value.obj = 0;
-    mrb_value *src = v->value.obj;
-    mrb_value **dst = &ary.value.obj;
+//  mrb_value *src = v->value.obj;
+//// *src = *v->value.obj;
+    src = v->value.obj;
+
+//  mrb_value **dst = &ary.value.obj;
+//// **dst = **&ary.value.obj;
+    dst = &ary.value.obj;
+
     // SRC
     if( src ){
       *dst = mrb_obj_alloc(MRB_TT_OBJECT);
@@ -154,9 +163,20 @@ static void c_array_last(mrb_vm *vm, mrb_value *v)
     int num = GET_INT_ARG(0);
     int cnt = array_size(v);
     mrb_value ret;
+
+//  volatile obj;
+    mrb_value *obj;
+
     ret.tt = MRB_TT_ARRAY;
     ret.value.obj = 0;
-    mrb_value *obj = v->value.obj;
+//  mrb_value *obj = v->value.obj;
+//// *obj = *v->value.obj;
+    obj = v->value.obj;
+
+//  mrb_value *obj = v->value.obj;
+//// *obj = *v->value.obj;
+    obj = v->value.obj;
+
     while( obj && cnt > num ){
       num++;
       obj = obj->next;

@@ -14,6 +14,8 @@
 int main(void)
 {
   struct VM *vm;
+  int ret;
+  int keep_execute;
 
   init_static();
 
@@ -23,7 +25,9 @@ int main(void)
     return -1;
   }
 
-  int ret = loca_mrb_array(vm, ary);
+// int ret = loca_mrb_array(vm, ary);
+  ret = loca_mrb_array(vm, ary);
+
   if( ret != NO_ERROR ){
     printf("MRB Load Error (%04x_%04x)\n", ret>>16, ret&0xffff);
     return -1;
@@ -31,7 +35,9 @@ int main(void)
 
   vm_boot( vm );
 
-  int keep_execute = 1;
+// int keep_execute = 1;
+  keep_execute = 1;
+
   while( keep_execute ){
     if( vm_run_step(vm) < 0 ){
       keep_execute = 0;
