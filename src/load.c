@@ -41,20 +41,34 @@ int load_irep(struct VM *vm, char **pos)
   char *p = *pos;
   int i;
 
+  int cnt; int sz; int sz2;
+  mrb_irep *irep;
+  int plen;
+  mrb_object *ptr;
+  int slen;
+
   p += 4;
-  int sz = get_int_4(p);  p += 4;
+// int sz = get_int_4(p);  p += 4;
+  sz = get_int_4(p);  p += 4;
 
   if( !check_str_4(p, "0000") ){
     return LOAD_FILE_IREP_ERROR_VERSION;
   }
   p += 4;
 
-  int cnt = 0;
+// int cnt = 0;
+  cnt = 0;
   while( cnt < sz ){
-    int sz2 = get_int_4(p);  p += 4;
+//  int sz2 = get_int_4(p);  p += 4;
+    sz2 = get_int_4(p);
+    p += 4;
 
     // new irep
-    mrb_irep *irep = new_irep();
+//  mrb_irep *irep = new_irep();
+//// *irep = *new_irep();
+   irep = new_irep();
+
+//  if( irep == 0 ){
     if( irep == 0 ){
       return LOAD_FILE_IREP_ERROR_ALLOCATION;
     }
@@ -87,11 +101,17 @@ int load_irep(struct VM *vm, char **pos)
 
     // pool
     irep->ptr_to_pool = 0;
-    int plen = get_int_4(p);    p += 4;
+//  int plen = get_int_4(p);    p += 4;
+
+    plen = get_int_4(p);    p += 4;
+
     for( i=0 ; i<plen ; i++ ){
       int tt = (int)*p++;
       int obj_size = get_int_2(p);   p += 2;
-      mrb_object *ptr = mrb_obj_alloc(MRB_TT_FALSE);
+//    mrb_object *ptr = mrb_obj_alloc(MRB_TT_FALSE);
+////  *ptr = *mrb_obj_alloc(MRB_TT_FALSE);
+      ptr = mrb_obj_alloc(MRB_TT_FALSE);
+
       if( ptr == 0 ){
         return LOAD_FILE_IREP_ERROR_ALLOCATION;
       }
@@ -120,7 +140,9 @@ int load_irep(struct VM *vm, char **pos)
 
     //  syms
     irep->ptr_to_sym = p;
-    int slen = get_int_4(p);    p += 4;
+//  int slen = get_int_4(p);    p += 4;
+    slen = get_int_4(p);    p += 4;
+
     for( i=0 ; i<slen ; i++ ){
       int s = get_int_2(p);     p += 2;
       p += s+1;
@@ -180,11 +202,15 @@ int loca_mrb_array(struct VM *vm, char *ptr)
 #ifdef MRUBYC_USE_FILEIO
 int load_mrb_file(struct VM *vm, char *fn)
 {
+  int sz;
+
   /* load to memory */
   FILE *fp = fopen(fn, "rb");
   if( fp==NULL ) return LOAD_FILE_ERROR_NOFILE;
   fseek( fp, 0, SEEK_END );
-  int sz = ftell( fp );
+// int sz = ftell( fp );
+  sz = ftell( fp );
+
   fseek( fp, 0, SEEK_SET );
   vm->mrb = (char *)malloc(sizeof(char)*sz);
   if( vm->mrb == NULL ){

@@ -13,6 +13,8 @@
 void mrubyc(char *fn)
 {
   struct VM *vm;
+  int ret;
+  int keep_execute;
 
   init_static();
 
@@ -21,7 +23,9 @@ void mrubyc(char *fn)
     printf("VM open Error\n");
     return;
   }
-  int ret = load_mrb_file(vm, fn);
+// int ret = load_mrb_file(vm, fn);
+  ret = load_mrb_file(vm, fn);
+
   if( ret != NO_ERROR ){
     printf("MRB Load Error (%04x_%04x)\n", ret>>16, ret&0xffff);
     return;
@@ -29,7 +33,9 @@ void mrubyc(char *fn)
 
   vm_boot( vm );
 
-  int keep_execute = 1;
+// int keep_execute = 1;
+  keep_execute = 1;
+
   while( keep_execute ){
     if( vm_run_step(vm) < 0 ){
       keep_execute = 0;
