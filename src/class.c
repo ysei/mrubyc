@@ -100,17 +100,40 @@ void c_puts(mrb_vm *vm, mrb_value *v)
 {
   mrb_object *arg0 = v+1;
   switch( arg0->tt ){
+  case MRB_TT_EMPTY:
+    console_printf("(empty)");
+    break;
+  case MRB_TT_TRUE:
+    console_printf("true");
+    break;
+  case MRB_TT_FALSE:
+    console_printf("");
+    break;
+  case MRB_TT_NIL:
+    console_printf("");
+    break;
   case MRB_TT_FIXNUM:
     console_printf("%d", arg0->value.i);
     break;
-  case MRB_TT_FALSE:
-//    console_printf("nil");
-    break;
-#if MRUBYC_USE_FLOAT
   case MRB_TT_FLOAT:
+#if MRUBYC_USE_FLOAT
     console_printf("%f", arg0->value.d);
-    break;
+#else
+    console_printf("(float)")
 #endif
+    break;
+  case MRB_TT_OBJECT:
+    console_printf("");
+    break;
+  case MRB_TT_CLASS:
+    console_printf("(class)");
+    break;
+  MRB_TT_PROC,
+    console_printf("(proc)");
+    break;
+  MRB_TT_ARRAY,
+    console_printf("(array)");
+    break;
   default:
     console_printf("Not supported: MRB_TT_XX(%d)", arg0->tt);
     break;
@@ -123,6 +146,7 @@ void c_add(mrb_vm *vm, mrb_value *v)
 {
   SET_INT_RETURN( GET_INT_ARG(0) + GET_INT_ARG(1) );
 }
+
 
 
 static void mrb_init_class_object(void)

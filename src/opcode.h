@@ -72,6 +72,9 @@ enum OPCODE {
   OP_SUB       = 0x2e,
   OP_SUBI      = 0x2f,
 
+  OP_MUL       = 0x30,/*       A B C   R(A) := R(A)*R(A+1) (Syms[B]=:*,C=1)            */
+  OP_DIV       = 0x31,/*       A B C   R(A) := R(A)/R(A+1) (Syms[B]=:/,C=1)            */
+
   OP_EQ        = 0x32,
   OP_LT        = 0x33,
   OP_LE        = 0x34,
