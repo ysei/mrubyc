@@ -47,9 +47,14 @@ static void console_print_value(int value, int dir, int w, int base, char pad)
   }
 
   int idx = 0;
-  while( value > 0 ){
-    buf[idx++] = hex[value % base];
-    value /= base;
+  if( value == 0 ){
+    buf[idx++] = hex[value];
+  }
+  else{
+    while( value > 0 ){
+      buf[idx++] = hex[value % base];
+      value /= base;
+    }
   }
 
   if( sign == -1 ) w--;
